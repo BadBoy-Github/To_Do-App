@@ -1,19 +1,25 @@
+import React from "react";
 
-import React from 'react'
-
-import tick from  '../assets/tick.png'
+import tick from "../assets/tick.png";
 import not_tick from "../assets/not_tick.png";
-import delete_icon from '../assets/delete.png'
+import { MdDelete } from "react-icons/md";
 
-const TodoItems = () => {
+const TodoItems = ({ text, id, inComplete, deleteTodo }) => {
   return (
     <div className="flex items-center my-3 gap-2">
-      <div className="text-black">
-        <img src={not_tick} alt="" />
-        <p>Learn React JS</p>
+      <div className="flex flex-1 items-center cursor-pointer">
+        <img src={tick} alt="box" className="w-6" />
+        <p className="text-slate-700 ml-4 text-[17px]">{text}</p>
       </div>
+
+        <MdDelete
+          onClick={() => {
+            deleteTodo(id);
+          }}
+          className="size-5 cursor-pointer text-orange-600 hover:text-orange-700 hover:scale-90 active:text-orange-600 active:scale-100 transition-all duration-200"
+        />
     </div>
   );
-}
+};
 
-export default TodoItems
+export default TodoItems;
