@@ -1,31 +1,47 @@
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 
 import TodoItems from "./TodoItems";
 
 import todo_icon from "../assets/todo_icon.png";
 
 const Todo = () => {
+  const [todoList, setTodoList] = useState([]);
 
-    const [todoList, setTodoList] = useState([]);
+  const inputRef = useRef();
 
-    const inputRef = useRef();
+  const add = () => {
+    const inputText = inputRef.current.value.trim();
+    if (inputText === "") return null;
 
-    const add = () => {
-        const inputText = inputRef.current.value.trim();
-        if (inputText === "") return null;
-        
-        const newTodo = {
-            id: Date.now(),
-            text: inputText,
-            isComplete: false,
+    const newTodo = {
+      id: Date.now(),
+      text: inputText,
+      isComplete: false,
+    };
+    setTodoList((prev) => [...prev, newTodo]);
+    inputRef.current.value = "";
+  };
+
+  const deleteTodo = (id) => {
+    setTodoList((prev) => {
+      return prev.filter((item) => item.id !== id);
+    });
+  };
+
+  const toggle = (id) => {
+    setTodoList((prev) => {
+      return prev.map((item) => {
+        if (item.id === id) {
+          return { ...item, isComplete: !item.isComplete };
         }
-        setTodoList((prev) => [...prev, newTodo]);
-        inputRef.current.value = "";
-    }
+        return item;
+      });
+    });
+  };
 
-    const deleteTodo = (id) => {
-        setTodoList((prev) => { return prev.filter((item) => item.id !== id)});
-    }
+  useEffect(() => {
+    console.log(todoList);
+  }, [todoList])
 
   return (
     <div className="bg-white place-self-center w-11/12 max-w-md flex flex-col p-7 min-h-[550px] rounded-xl">
@@ -54,17 +70,17 @@ const Todo = () => {
       {/* Todo List */}
       <div className="">
         {todoList.map((item, index) => {
-            return (
-              <TodoItems
-                key={index}
-                text={item.text}
-                id={item.id}
-                isComplete={item.isComplete}
-                deleteTodo={deleteTodo}
-              />
-            );
+          return (
+            <TodoItems
+              key={index}
+              text={item.text}
+              id={item.id}
+              isComplete={item.isComplete}
+              deleteTodo={deleteTodo}
+              toggle={toggle}
+            />
+          );
         })}
-
       </div>
     </div>
   );
